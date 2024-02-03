@@ -90,18 +90,23 @@ def perform_clustering(dsm_matrix, sub_systems):
     # Determine the optimal number of clusters for K-means using the elbow method
     wcss = calculate_wcss(X)
     optimal_k = optimal_number_of_clusters(wcss)
+    
     print(f"Optimal number of clusters for K-means: {optimal_k}")
+    
     kmeans = KMeans(n_clusters=optimal_k, random_state=42)
     kmeans_labels = kmeans.fit_predict(X)
     clustering_results['kmeans'] = kmeans_labels
+    
     print_cluster_details(kmeans_labels, sub_systems, 'K-means')
 
     # Perform Spectral clustering
     optimal_spectral_clusters = estimate_optimal_clusters_spectral(X)
     print(f"Optimal number of clusters for Spectral Clustering: {optimal_spectral_clusters}")
+    
     spectral = SpectralClustering(n_clusters=optimal_spectral_clusters, n_neighbors=min(optimal_spectral_clusters, len(X)), random_state=42, affinity='nearest_neighbors')
     spectral_labels = spectral.fit_predict(X)
     clustering_results['spectral'] = spectral_labels
+    
     print_cluster_details(spectral_labels, sub_systems, 'Spectral')
 
     # Perform Agglomerative clustering
@@ -109,6 +114,7 @@ def perform_clustering(dsm_matrix, sub_systems):
     agglomerative = AgglomerativeClustering(n_clusters=optimal_k)
     agglomerative_labels = agglomerative.fit_predict(X)
     clustering_results['agglomerative'] = agglomerative_labels
+    
     print_cluster_details(agglomerative_labels, sub_systems, 'Agglomerative')
 
     return clustering_results
@@ -289,11 +295,17 @@ def visualize_dsm(dsm_matrix, sub_systems, ax):
         ax (matplotlib.axes.Axes): The Axes object to plot on.
     """
     cmap = plt.cm.get_cmap('Greys', 2)
+    
     cax = ax.matshow(dsm_matrix, interpolation='nearest', cmap=cmap)
+    
     ax.set_xticks(np.arange(len(sub_systems)))
+    
     ax.set_yticks(np.arange(len(sub_systems)))
+    
     ax.set_xticklabels(sub_systems, rotation=90)
+    
     ax.set_yticklabels(sub_systems)
+    
 
     for i in range(len(sub_systems)):
         ax.plot(i, i, marker='o', color='blue', markersize=10)
